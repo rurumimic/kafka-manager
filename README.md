@@ -1,26 +1,27 @@
 # kafka-manager
 
-- [yahoo/kafka-manager](https://github.com/yahoo/kafka-manager)
+- [yahoo/CMAK](https://github.com/yahoo/CMAK)
 - [sheepkiller/kafka-manager-docker](https://github.com/sheepkiller/kafka-manager-docker)
 
 ## Dockerfile
 
 ```Dockerfile
-FROM openjdk:8-jre-alpine
+FROM adoptopenjdk/openjdk11:alpine-slim
 
 RUN apk add --no-cache bash
 
 ENV ZK_HOSTS=localhost:2181 \
-    KM_VERSION=1.3.3.21 \
+    KM_VERSION=3.0.0.5 \
     KM_CONFIGFILE="conf/application.conf"
 
-COPY . /kafka-manager-${KM_VERSION}
+COPY . /cmak
 
-WORKDIR /kafka-manager-${KM_VERSION}
+WORKDIR /cmak
 
 EXPOSE 9000
 
-ENTRYPOINT ["./bin/kafka-manager"]
+ENTRYPOINT ["./bin/cmak"]
+
 ```
 
 ## docker-compose.yml
@@ -37,7 +38,7 @@ services:
       - 2181:2181
     environment:
       ZOO_MY_ID: 1
-      ZOO_SERVERS: server.1=0.0.0.0:2888:3888
+      ZOO_SERVERS: server.1=0.0.0.0:2888:3888;2181
 
   kafka:
     image: wurstmeister/kafka:latest
