@@ -1,68 +1,103 @@
 # kafka-manager
 
+Docker Hub: [rurumimic/kafka-manager](https://hub.docker.com/repository/docker/rurumimic/kafka-manager)
+
+## Refs
+
 - [yahoo/CMAK](https://github.com/yahoo/CMAK)
 - [sheepkiller/kafka-manager-docker](https://github.com/sheepkiller/kafka-manager-docker)
 
 ## Dockerfile
 
-```Dockerfile
-FROM adoptopenjdk/openjdk11:alpine-slim
+### Download latest version.zip
 
-RUN apk add --no-cache bash
+- [yahoo/CMAK/releases](https://github.com/yahoo/CMAK/releases)
+  - version: `3.0.0.6`
 
-ENV ZK_HOSTS=localhost:2181 \
-    KM_VERSION=3.0.0.5 \
-    KM_CONFIGFILE="conf/application.conf"
+unzip and rename directory: `cmak/`
 
-COPY . /cmak
+### Edit Dockerfile
 
-WORKDIR /cmak
+- [Dockerfile](Dockerfile)
+- Update `KM_VERSION`
 
-EXPOSE 9000
+---
 
-ENTRYPOINT ["./bin/cmak"]
+## Docker Image
 
+```bash
+VERSION=3.0.0.6
 ```
 
-## docker-compose.yml
+### Build Image
+
+```bash
+docker build -t rurumimic/kafka-manager:$VERSION .
+docker tag rurumimic/kafka-manager:$VERSION rurumimic/kafka-manager:latest
+```
+
+### Publish Image
+
+```bash
+docker login
+docker push rurumimic/kafka-manager:$VERSION
+docker push rurumimic/kafka-manager:latest
+```
+
+---
+
+## Docker Compose
+
+### Edit docker-compose.yml
+
+- Copy from: [docker-compose.sample.yml](docker-compose.sample.yml)
+- Update `KAFKA_ADVERTISED_HOST_NAME: # <HOSTIP>` in `docker-compose.yml`
+
+`docker-compose.sample.yml`: Line 24. Set `KAFKA_ADVERTISED_HOST_NAME: # <HOST_IP>`
+
+```bash
+cp docker-compose.sample.yml docker-compose.yml
+```
+
+Do not use localhost or 127.0.0.1 as the host ip.
+
+```bash
+# mac
+ifconfig | grep inet
+
+inet 192.168.XXX.XXX netmask 0xffffff00 broadcast 192.168.XXX.255
+```
 
 ```yml
-version: '2.4'
-services:
-  zoo:
-    image: zookeeper:latest
-    restart: always
-    container_name: zoo
-    hostname: zoo
-    ports:
-      - 2181:2181
-    environment:
-      ZOO_MY_ID: 1
-      ZOO_SERVERS: server.1=0.0.0.0:2888:3888;2181
-
-  kafka:
-    image: wurstmeister/kafka:latest
-    restart: always
-    container_name: kafka
-    hostname: kafka
-    ports:
-      - 9092:9092
-      - 9192:9192
-    environment:
-      KAFKA_ADVERTISED_HOST_NAME: <HOSTIP>
-      KAFKA_ZOOKEEPER_CONNECT: zoo:2181
-      JMX_PORT: 9192
-      KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=kafka -Djava.net.preferIPv4Stack=true"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-
-  manager:
-    image: rurumimic/kafka-manager:latest
-    restart: always
-    container_name: manager
-    hostname: manager
-    ports:
-      - 9000:9000
-    environment:
-      ZK_HOSTS: "zoo:2181"
+KAFKA_ADVERTISED_HOST_NAME: 192.168.XXX.XXX
 ```
+
+### Start a cluster
+
+```bash
+docker compose up -d
+```
+
+### Kafka Manager
+
+[localhost:9000](http://localhost:9000)
+
+1. Cluster: Add Cluster
+   1. Cluster Name: anything
+   1. Cluster Zookeeper Hosts: `zoo:2181`
+   1. Check:
+      - Enable JMX Polling (Set JMX_PORT env variable before starting kafka server)
+      - Poll consumer information (Not recommended for large # of consumers if ZK is used for offsets tracking on older Kafka versions)
+
+### Clean up
+
+```bash
+docker compose down -v
+```
+
+---
+
+## Screenshot
+
+![](images/add_cluster.png)
+![](images/a_cluster.png)
