@@ -2,10 +2,21 @@
 
 Docker Hub: [rurumimic/kafka-manager](https://hub.docker.com/repository/docker/rurumimic/kafka-manager)
 
+Contents:
+
+- Build: [Dockerfile](#dockerfile)
+- Run [Docker Compose](#docker-compose)
+- Open [Kafka Manager](#open-kafka-manager)
+- [Screenshots](#screenshots)
+
+---
+
 ## Refs
 
 - [yahoo/CMAK](https://github.com/yahoo/CMAK)
 - [sheepkiller/kafka-manager-docker](https://github.com/sheepkiller/kafka-manager-docker)
+
+---
 
 ## Dockerfile
 
@@ -21,9 +32,7 @@ unzip and rename directory: `cmak/`
 - [Dockerfile](Dockerfile)
 - Update `KM_VERSION`
 
----
-
-## Docker Image
+### Docker Image
 
 ```bash
 VERSION=3.0.0.6
@@ -78,7 +87,15 @@ KAFKA_ADVERTISED_HOST_NAME: 192.168.XXX.XXX
 docker compose up -d
 ```
 
-### Kafka Manager
+### Clean up
+
+```bash
+docker compose down -v
+```
+
+---
+
+## Open Kafka Manager
 
 [localhost:9000](http://localhost:9000)
 
@@ -89,15 +106,9 @@ docker compose up -d
       - Enable JMX Polling (Set JMX_PORT env variable before starting kafka server)
       - Poll consumer information (Not recommended for large # of consumers if ZK is used for offsets tracking on older Kafka versions)
 
-### Clean up
-
-```bash
-docker compose down -v
-```
-
 ---
 
-## Screenshot
+## Screenshots
 
-![](images/add_cluster.png)
-![](images/a_cluster.png)
+![add_cluster](images/add_cluster.png)
+![a_cluster](images/a_cluster.png)
