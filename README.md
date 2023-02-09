@@ -1,13 +1,14 @@
 # kafka-manager
 
-Docker Hub: [rurumimic/kafka-manager](https://hub.docker.com/repository/docker/rurumimic/kafka-manager)
+- Docker Hub: [rurumimic/kafka-manager](https://hub.docker.com/r/rurumimic/kafka-manager)
+- GitHub: [rurumimic/kafka-manager](https://github.com/rurumimic/kafka-manager)
 
 Contents:
 
-- Build: [Dockerfile](#dockerfile)
-- Run [Docker Compose](#docker-compose)
-- Open [Kafka Manager](#open-kafka-manager)
-- [Screenshots](#screenshots)
+- Build: [Dockerfile](https://github.com/rurumimic/kafka-manager#dockerfile)
+- Run [Docker Compose](https://github.com/rurumimic/kafka-manager#docker-compose)
+- Open [Kafka Manager](https://github.com/rurumimic/kafka-manager#open-kafka-manager)
+- [Screenshots](https://github.com/rurumimic/kafka-manager#screenshots)
 
 ---
 
@@ -29,7 +30,7 @@ unzip and rename directory: `cmak/`
 
 ### Edit Dockerfile
 
-- [Dockerfile](Dockerfile)
+- [Dockerfile](https://github.com/rurumimic/kafka-manager/blob/master/Dockerfile)
 - Update `KM_VERSION`
 
 ### Docker Image
@@ -59,7 +60,7 @@ docker push rurumimic/kafka-manager:latest
 
 ### Edit docker-compose.yml
 
-- Copy from: [docker-compose.sample.yml](docker-compose.sample.yml)
+- Copy from: [docker-compose.sample.yml](https://github.com/rurumimic/kafka-manager/blob/master/docker-compose.sample.yml)
 - Update `KAFKA_ADVERTISED_HOST_NAME: # <HOSTIP>` in `docker-compose.yml`
 
 `docker-compose.sample.yml`: Line 24. Set `KAFKA_ADVERTISED_HOST_NAME: # <HOST_IP>`
@@ -110,5 +111,5 @@ docker compose down -v
 
 ## Screenshots
 
-![add_cluster](images/add_cluster.png)
-![a_cluster](images/a_cluster.png)
+![add_cluster](https://raw.githubusercontent.com/rurumimic/kafka-manager/master/images/add_cluster.png)
+![a_cluster](https://raw.githubusercontent.com/rurumimic/kafka-manager/master/images/a_cluster.png)
